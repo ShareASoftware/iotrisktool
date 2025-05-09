@@ -1,0 +1,70 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+*.sublime-*
+
+# IntelliJ related
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Build results
+app-*
+flutter_*.framework
+
+# Obfuscation related
+app.*.map.json
+
+# Android related
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/key.properties
+**/android/**/GeneratedPluginRegistrant.java
+
+# iOS/macOS related
+**/ios/Pods/
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/.symlinks/
+**/ios/Flutter/App.framework
+**/ios/Flutter/engine.framework
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/snapshot_blob.bin
+**/ios/Flutter/debug_ios_bundle_flutter_assets
+**/ios/DerivedData/
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Sensitive Keys (KEEP THESE PRIVATE!)
+*.keystore
+*.jks
+key.properties
