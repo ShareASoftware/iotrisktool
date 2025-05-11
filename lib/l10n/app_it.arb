@@ -32,6 +32,8 @@
   "levelMedium": "Medio",
   "levelHigh": "Alto",
   "linkCopiedMessage": "Link condivisibile copiato negli appunti!",
+  "repositoryInfo": "Questo progetto è open source! Trova il repository su: {repoLink}",
+  "collaborationInvitation": "Accogliamo con favore i contributi. Sentiti libero di fare un fork, segnalare problemi o inviare pull request!",
 
   "section_5_0_title": "5.0 Implementazione della segnalazione",
   "p_5_0_1_desc": "Dettagli sull'implementazione della segnalazione",

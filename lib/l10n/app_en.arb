@@ -32,6 +32,8 @@
   "levelMedium": "Medium",
   "levelHigh": "High",
   "linkCopiedMessage": "Shareable link copied to clipboard!",
+  "repositoryInfo": "This project is open source! Find the repository at: {repoLink}",
+  "collaborationInvitation": "We welcome contributions. Feel free to fork, submit issues, or pull requests!",
 
   "section_5_0_title": "5.0 Reporting implementation",
   "p_5_0_1_desc": "Reporting implementation details",

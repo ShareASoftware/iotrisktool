@@ -979,6 +979,29 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 40.0), // Space before the footer
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        l10n.repositoryInfo(
+                            'https://github.com/ShareASoftware/iotrisktool'),
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(fontSize: 12.0, color: Colors.grey[700]),
+                      ),
+                      const SizedBox(height: 8.0),
+                      Text(
+                        l10n.collaborationInvitation,
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(fontSize: 12.0, color: Colors.grey[700]),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20.0), // Space at the very bottom
               ],
             ),
           ),
