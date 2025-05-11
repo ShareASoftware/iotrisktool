@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
         Locale('it', ''), // Italian, no country code
       ],
       // --- End Localization Setup ---
-      home: const ThreatAssessmentPage(),
+      home: ThreatAssessmentPage(currentLocale: _locale), // Pass current locale
       debugShowCheckedModeBanner: false, // Hide debug banner
     );
   }
@@ -114,7 +114,9 @@ class ThreatData {
 }
 
 class ThreatAssessmentPage extends StatefulWidget {
-  const ThreatAssessmentPage({super.key});
+  final Locale currentLocale; // Add locale parameter
+  const ThreatAssessmentPage(
+      {super.key, required this.currentLocale}); // Update constructor
 
   @override
   _ThreatAssessmentPageState createState() => _ThreatAssessmentPageState();
@@ -155,6 +157,22 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
     if (!_threatDataInitialized) {
       final l10n = AppLocalizations.of(context)!;
       _initializeThreatDataList(l10n);
+      _threatDataInitialized = true;
+    }
+  }
+
+  @override
+  void didUpdateWidget(ThreatAssessmentPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Check if the locale passed from MyApp has changed
+    if (widget.currentLocale != oldWidget.currentLocale) {
+      // Locale has changed, re-initialize the threat data list
+      // AppLocalizations.of(context) will now provide translations for the new locale
+      final l10n = AppLocalizations.of(context)!;
+      setState(() {
+        // Call setState to trigger a rebuild with the new data
+        _initializeThreatDataList(l10n);
+      });
       _threatDataInitialized = true;
     }
   }
@@ -651,6 +669,7 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!; // Get localizations instance
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
@@ -670,30 +689,31 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
+                Padding(
+                  // Removed const
+                  padding: const EdgeInsets.only(bottom: 20.0),
                   child: Column(
                     children: [
                       Text(
-                        'Based on Annex B, Table B.1: Use this table to identify potential threats to your IoT device and assess their risk.',
+                        l10n.pageDescription1, // Use localized string
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 14.0,
                             color: Colors.black54), // Adjusted font size
                       ),
-                      SizedBox(height: 8.0),
+                      const SizedBox(height: 8.0),
                       Text(
-                        'Fill in the \'Applicable\', \'Likelihood\', and \'Impact\' fields for each threat. The \'Risk Score\' will be calculated automatically.',
+                        l10n.pageDescription2, // Use localized string
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 14.0,
                             color: Colors.black54), // Adjusted font size
                       ),
-                      SizedBox(height: 8.0),
+                      const SizedBox(height: 8.0),
                       Text(
-                        'Note: This is a template. Please populate the data according to the requirements.',
+                        l10n.pageDescription3, // Use localized string
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 12.0,
                             color: Colors.red), // Adjusted font size
                       ),
@@ -706,9 +726,10 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                       bottom: 20.0, left: 16.0, right: 16.0),
                   child: TextField(
                     controller: _productNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Product Name / System Under Assessment',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      // Removed const
+                      labelText: l10n.productNameLabel, // Use localized string
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                 ),
@@ -734,22 +755,15 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                           children: [
                             // Table Header
                             ThreatRow(
-                              provisionName: AppLocalizations.of(context)!
-                                  .provisionNameHeader,
-                              provisionStatus: AppLocalizations.of(context)!
-                                  .provisionStatusHeader,
+                              provisionName: l10n.provisionNameHeader,
+                              provisionStatus: l10n.provisionStatusHeader,
                               isHeader: true,
-                              applicable: AppLocalizations.of(context)!
-                                  .applicableHeader,
-                              likelihood: AppLocalizations.of(context)!
-                                  .likelihoodHeader,
-                              impact:
-                                  AppLocalizations.of(context)!.impactHeader,
-                              status:
-                                  AppLocalizations.of(context)!.statusHeader,
-                              riskScore:
-                                  AppLocalizations.of(context)!.riskScoreHeader,
-                              notes: AppLocalizations.of(context)!.notesHeader,
+                              applicable: l10n.applicableHeader,
+                              likelihood: l10n.likelihoodHeader,
+                              impact: l10n.impactHeader,
+                              status: l10n.statusHeader,
+                              riskScore: l10n.riskScoreHeader,
+                              notes: l10n.notesHeader,
                             ),
                             const Divider(height: 1.0, color: Colors.grey),
                             // Dynamically build rows and section headers
@@ -773,95 +787,71 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 20.0),
+                Padding(
+                  // Removed const
+                  padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
-                    'Risk Score Calculation: (Likelihood Score * Impact Score). If Applicable is \'No\', Risk is N/A.\nScores: N/A=0, Low=1, Medium=2, High=3. Risk Levels: 1-2=Low (Green), 3-4=Medium (Amber), 6-9=High (Red).',
+                    l10n.riskScoreCalculationNote, // Use localized string
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14.0, color: Colors.black54),
+                    style:
+                        const TextStyle(fontSize: 14.0, color: Colors.black54),
                   ),
                 ),
                 // Added Notes Section
-                const Padding(
-                  padding: EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
+                Padding(
+                  // Removed const
+                  padding:
+                      const EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Notes:',
-                        style: TextStyle(
+                        l10n.notesSectionTitle, // Use localized string
+                        style: const TextStyle(
                             fontSize: 16.0, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 8.0),
+                      const SizedBox(height: 8.0),
                       Text(
-                        'Condition:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        l10n.conditionSectionTitle, // Use localized string
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text('3) software components are not updateable;'),
-                      Text('12) an update mechanism is implemented;'),
+                      Text(l10n.conditionNoteItem1),
+                      Text(l10n.conditionNoteItem2),
+                      Text(l10n.conditionNoteItem3),
+                      Text(l10n.conditionNoteItem4),
+                      Text(l10n.conditionNoteItem5),
+                      const SizedBox(height: 12.0),
                       Text(
-                          '14) the consumer IoT device has no resource constraint determined by the use case that prevents the implementation of a mechanism which makes successful brute-force attacks on authentication mechanisms via network interfaces impracticable;'),
-                      Text(
-                          '15) the consumer IoT device has no resource constraint determined by the use case that prevents the implementation of an update mechanism;'),
-                      Text(
-                          '16) existence of critical security parameters that relate to the consumer IoT device;'),
-                      SizedBox(height: 12.0),
-                      Text(
-                        'Feature, capability or mechanism that needs to be present for the corresponding provision to apply:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        l10n.featureSectionTitle, // Use localized string
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                          'a) passwords can be used to authenticate users against the device or for machine-to-machine authentication;'),
-                      Text(
-                          'b) pre-installed unique per device passwords can be used to authenticate users against the device or for machine-to-machine authentication;'),
-                      Text(
-                          'c) cryptographic authentication mechanisms, including password based mechanisms, can be used to authenticate users against the consumer IoT device or for machine-to-machine authentication;'),
-                      Text(
-                          'd) authentication mechanisms can be used to authenticate users against the consumer IoT device;'),
-                      Text(
-                          'e) authentication mechanisms can be used for authenticating users or devices via network interfaces;'),
-                      Text(
-                          'f) software components that are not immutable due to security reasons;'),
-                      Text(
-                          'g) software components of the device can be updated;'),
-                      Text('h) automatic software updates are supported;'),
-                      Text(
-                          'i) update notifications are provided when software updates are available;'),
-                      Text(
-                          'j) software updates can be delivered over a network interface;'),
-                      Text(
-                          'k) sensitive security parameters exist in persistent storage;'),
-                      Text(
-                          'l) hard-coded unique per device identities are used in the consumer IoT device for security purposes;'),
-                      Text(
-                          'm) critical security parameters are used for integrity or authenticity checks of software updates or for protection of communication with associated services;'),
-                      Text(
-                          'n) the consumer IoT device allows security-relevant changes in configuration via a network interface;'),
-                      Text(
-                          'o) critical security parameters used by the device can be communicated outside of the device;'),
-                      Text(
-                          'p) unused network or network accessible logical interfaces exist;'),
-                      Text('q) debug interfaces exist on the device;'),
-                      Text(
-                          'r) debug interfaces that are physical ports exist on the device;'),
-                      Text(
-                          's) secure boot or other mechanism to detect unauthorized changes to IoT device software are supported by the device;'),
-                      Text(
-                          't) the consumer IoT device sends personal data to associated services;'),
-                      Text(
-                          'u) the consumer IoT device sends sensitive personal data to associated services;'),
-                      Text(
-                          'v) the consumer IoT device includes external sensing capabilities;'),
-                      Text(
-                          'w) telemetry data can be collected from consumer IoT devices and products;'),
-                      Text(
-                          'x) personal data can be stored by an associated service;'),
-                      Text(
-                          'y) the consumer IoT device processes personal data on the basis of consumers\' consent;'),
-                      Text(
-                          'z) the consumer IoT device processes personal data;'),
-                      Text(
-                          'aa) capabilities to collect data from consumer IoT devices or to processed data on the consumer IoT device, whose purpose is solely to compute an aggregate result. '),
+                      Text(l10n.featureNoteItemA),
+                      Text(l10n.featureNoteItemB),
+                      Text(l10n.featureNoteItemC),
+                      Text(l10n.featureNoteItemD),
+                      Text(l10n.featureNoteItemE),
+                      Text(l10n.featureNoteItemF),
+                      Text(l10n.featureNoteItemG),
+                      Text(l10n.featureNoteItemH),
+                      Text(l10n.featureNoteItemI),
+                      Text(l10n.featureNoteItemJ),
+                      Text(l10n.featureNoteItemK),
+                      Text(l10n.featureNoteItemL),
+                      Text(l10n.featureNoteItemM),
+                      Text(l10n.featureNoteItemN),
+                      Text(l10n.featureNoteItemO),
+                      Text(l10n.featureNoteItemP),
+                      Text(l10n.featureNoteItemQ),
+                      Text(l10n.featureNoteItemR),
+                      Text(l10n.featureNoteItemS),
+                      Text(l10n.featureNoteItemT),
+                      Text(l10n.featureNoteItemU),
+                      Text(l10n.featureNoteItemV),
+                      Text(l10n.featureNoteItemW),
+                      Text(l10n.featureNoteItemX),
+                      Text(l10n.featureNoteItemY),
+                      Text(l10n.featureNoteItemZ),
+                      Text(l10n.featureNoteItemAA),
                     ],
                   ),
                 ),
@@ -874,15 +864,13 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                     ElevatedButton(
                       onPressed: () =>
                           _generatePdf(context), // Pass context here
-                      child:
-                          Text(AppLocalizations.of(context)!.generatePdfButton),
+                      child: Text(l10n.generatePdfButton),
                     ),
                     const SizedBox(width: 20.0), // Space between buttons
                     ElevatedButton(
                       onPressed:
                           _createShareLink, // Call the placeholder function
-                      child:
-                          Text(AppLocalizations.of(context)!.shareLinkButton),
+                      child: Text(l10n.shareLinkButton),
                     ),
                   ],
                 ),
@@ -896,6 +884,7 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
 
   // Widget to build the language selection dropdown
   Widget _buildLanguageDropdown(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!; // Get localizations instance
     // Get the current language code
     final currentLanguageCode = Localizations.localeOf(context).languageCode;
     // Find the exact Locale object from the supported list that matches the current language code
@@ -910,10 +899,8 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
         icon: const Icon(Icons.language, color: Colors.white),
         // Generate items directly from the supported locales list
         items: AppLocalizations.supportedLocales.map((Locale locale) {
-          final langName = locale.languageCode == 'en'
-              ? AppLocalizations.of(context)!.langEnglish
-              : AppLocalizations.of(context)!
-                  .langItalian; // Add more checks if you support more languages
+          final langName =
+              locale.languageCode == 'en' ? l10n.langEnglish : l10n.langItalian;
           return DropdownMenuItem<Locale>(value: locale, child: Text(langName));
         }).toList(),
         onChanged: (Locale? locale) {
@@ -1114,6 +1101,7 @@ class _ThreatRowState extends State<ThreatRow> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!; // Get localizations instance
     // Define text style based on whether it's a header or not
     final TextStyle textStyle = widget.isHeader
         ? const TextStyle(
@@ -1128,12 +1116,12 @@ class _ThreatRowState extends State<ThreatRow> {
     Widget buildHeaderCell(String text) {
       return Expanded(
         // Define flex values for header columns
-        flex: text.contains(AppLocalizations.of(context)!.provisionNameHeader)
+        flex: text.contains(l10n.provisionNameHeader)
             ? 3
-            : text.contains(AppLocalizations.of(context)!.notesHeader)
+            : text.contains(l10n.notesHeader)
                 ? 2
-                : text.contains(AppLocalizations.of(context)!.statusHeader)
-                    ? 1
+                : text.contains(l10n.statusHeader) // Check for statusHeader
+                    ? 1 // Flex for statusHeader
                     : // Adjust if needed
                     1, // Default flex for other columns
         child: Padding(
@@ -1330,11 +1318,12 @@ class _ThreatRowState extends State<ThreatRow> {
                 padding: cellPadding,
                 child: TextField(
                   controller: _notesController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter notes...',
-                    border: OutlineInputBorder(),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  decoration: InputDecoration(
+                    // Removed const
+                    hintText: l10n.enterNotesHint, // Use localized string
+                    border: const OutlineInputBorder(),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 8.0),
                   ),
                   maxLines: null, // Allow multiple lines
                   keyboardType: TextInputType.multiline,
