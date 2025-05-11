@@ -124,6 +124,7 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
   // Controller and variable for Product Name
   final TextEditingController _productNameController = TextEditingController();
   String _productName = '';
+  // bool _isLoading = true; // State variable for loading indicator - Removed as data is static and loaded synchronously.
 
   // List to hold the state of all threat rows
 // Using List<dynamic> to store Strings (headers) and ThreatData objects
@@ -490,11 +491,17 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
   @override
   void initState() {
     super.initState();
+    // The _isLoading state and Future.delayed have been removed because _threatDataList
+    // is initialized synchronously. Displaying a loader here was artificial.
+    // If data were truly loaded asynchronously in the future,
+    // using a FutureBuilder would be a more appropriate pattern.
     // Listen to changes in the product name field
     _productNameController.addListener(() {
-      setState(() {
-        _productName = _productNameController.text;
-      });
+      if (mounted) {
+        setState(() {
+          _productName = _productNameController.text;
+        });
+      }
     });
   }
 
@@ -647,8 +654,10 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
         backgroundColor: Colors.blue[700],
       ),
       body: SingleChildScrollView(
+        // Removed _isLoading check, content is shown directly
         // Allows scrolling if content overflows
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(
+            horizontal: 10.0, vertical: 15.0), // Adjusted padding
         child: Center(
           child: Container(
             constraints:
@@ -663,19 +672,25 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                       Text(
                         'Based on Annex B, Table B.1: Use this table to identify potential threats to your IoT device and assess their risk.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16.0, color: Colors.black54),
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.black54), // Adjusted font size
                       ),
                       SizedBox(height: 8.0),
                       Text(
                         'Fill in the \'Applicable\', \'Likelihood\', and \'Impact\' fields for each threat. The \'Risk Score\' will be calculated automatically.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16.0, color: Colors.black54),
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.black54), // Adjusted font size
                       ),
                       SizedBox(height: 8.0),
                       Text(
                         'Note: This is a template. Please populate the data according to the requirements.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 14.0, color: Colors.red),
+                        style: TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.red), // Adjusted font size
                       ),
                     ],
                   ),
@@ -698,739 +713,58 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        // Table Header
-                        ThreatRow(
-                          provisionName:
-                              AppLocalizations.of(context)!.provisionNameHeader,
-                          provisionStatus: AppLocalizations.of(context)!
-                              .provisionStatusHeader,
-                          isHeader: true,
-                          applicable:
-                              AppLocalizations.of(context)!.applicableHeader,
-                          likelihood:
-                              AppLocalizations.of(context)!.likelihoodHeader,
-                          impact: AppLocalizations.of(context)!.impactHeader,
-                          status: AppLocalizations.of(context)!
-                              .statusHeader, // Pass Status header text
-                          riskScore:
-                              AppLocalizations.of(context)!.riskScoreHeader,
-                          notes: AppLocalizations.of(context)!.notesHeader,
+                  child: SingleChildScrollView(
+                    // This SingleChildScrollView enables horizontal scrolling for the table content
+                    // when the content width (defined by the SizedBox below) exceeds the viewport width.
+                    scrollDirection: Axis.horizontal,
+                    child: SizedBox(
+                      // Ensure the content has a fixed width for Expanded to work
+                      width: 1200.0, // Min width for scrollable content
+                      child: Padding(
+                        padding: const EdgeInsets.all(
+                            8.0), // Inner padding for the table content
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment
+                              .stretch, // Stretch children to fill the width
+                          children: [
+                            // Table Header
+                            ThreatRow(
+                              provisionName: AppLocalizations.of(context)!
+                                  .provisionNameHeader,
+                              provisionStatus: AppLocalizations.of(context)!
+                                  .provisionStatusHeader,
+                              isHeader: true,
+                              applicable: AppLocalizations.of(context)!
+                                  .applicableHeader,
+                              likelihood: AppLocalizations.of(context)!
+                                  .likelihoodHeader,
+                              impact:
+                                  AppLocalizations.of(context)!.impactHeader,
+                              status:
+                                  AppLocalizations.of(context)!.statusHeader,
+                              riskScore:
+                                  AppLocalizations.of(context)!.riskScoreHeader,
+                              notes: AppLocalizations.of(context)!.notesHeader,
+                            ),
+                            const Divider(height: 1.0, color: Colors.grey),
+                            // Dynamically build rows and section headers
+                            // Replaced the for loop with ListView.builder for better performance,
+                            // especially with longer lists. It builds items lazily as they scroll into view.
+                            ListView.builder(
+                              shrinkWrap:
+                                  true, // Essential when nesting ListView inside a Column or another scroll view.
+                              physics:
+                                  const NeverScrollableScrollPhysics(), // The parent SingleChildScrollView handles scrolling.
+                              itemCount: _threatDataList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                // _buildRowOrHeader correctly differentiates between String headers and ThreatData rows.
+                                return _buildRowOrHeader(
+                                    _threatDataList[index], index);
+                              },
+                            ),
+                          ],
                         ),
-                        const Divider(
-                            height: 1.0,
-                            color:
-                                Colors.grey), // Divider between header and rows
-                        /*
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.0 Reporting implementation ---
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.0 Reporting implementation',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after title
-                        // Row for Provision 5.0-1
-                        ThreatRow(
-                          provisionName: 'Provision 5.0-1',
-                          isHeader: false,
-                          provisionStatus: 'M',
-                        ),
-
-                        // --- Subsection: 5.1 No universal default passwords ---
-                        Divider(
-                            height: 1.0,
-                            color:
-                                Colors.grey), // Divider before subsection title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.1 No universal default passwords',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color:
-                                Colors.grey), // Divider after subsection title
-                        ThreatRow(
-                            provisionName: 'Provision 5.1-1',
-                            provisionStatus: 'M F (a)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.1-2',
-                            provisionStatus: 'M F (b)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.1-2A',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.1-3',
-                            provisionStatus: 'M F (c)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.1-4',
-                            provisionStatus: 'M F (d)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.1-5',
-                            provisionStatus: 'M C F (14, e)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.2 Implement a means to manage reports of vulnerabilities ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.2 Implement a means to manage reports of vulnerabilities',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.2
-                        ThreatRow(
-                            provisionName: 'Provision 5.2-1',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.2-2',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.2-3',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.3 Keep software updated ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.3 Keep software updated',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.3
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-1',
-                            provisionStatus: 'R F (f)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-2',
-                            provisionStatus: 'M C (15)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-3',
-                            provisionStatus: 'M F (g)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-4A',
-                            provisionStatus: 'R F (g)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-4B',
-                            provisionStatus: 'R F (h)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-5',
-                            provisionStatus: 'R F (g)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-6A',
-                            provisionStatus: 'R F (h)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-6B',
-                            provisionStatus: 'R F (i)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-7',
-                            provisionStatus: 'M F (g)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-8',
-                            provisionStatus: 'M C (12)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-9',
-                            provisionStatus: 'R F (g)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-10',
-                            provisionStatus: 'M F (j)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-11',
-                            provisionStatus: 'R C (12)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-12',
-                            provisionStatus: 'R C (12)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-13',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-14',
-                            provisionStatus: 'R C (3)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-15A',
-                            provisionStatus: 'R C (3)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-15B',
-                            provisionStatus: 'R C (3)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.3-16',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.4 Securely store sensitive security parameters ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.4 Securely store sensitive security parameters',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.4
-                        ThreatRow(
-                            provisionName: 'Provision 5.4-1',
-                            provisionStatus: 'M F (k)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.4-2',
-                            provisionStatus: 'M F (l)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.4-3',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.4-4',
-                            provisionStatus: 'M F (m)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.5 Communicate securely ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.5 Communicate securely',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.5
-                        ThreatRow(
-                            provisionName: 'Provision 5.5-1',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.5-2',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.5-3',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.5-4',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.5-5',
-                            provisionStatus: 'M F (n)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.5-6',
-                            provisionStatus: 'R F (o)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.5-7',
-                            provisionStatus: 'M F (o)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.5-8',
-                            provisionStatus: 'M C (16)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.6 Minimize exposed attack surfaces ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.6 Minimize exposed attack surfaces',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.6
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-1',
-                            provisionStatus: 'M F (p)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-2',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-3',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-4A',
-                            provisionStatus: 'M F (q)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-4B',
-                            provisionStatus: 'R F (r)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-5',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-6',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-7',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-8',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.6-9',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.7 Ensure software integrity ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.7 Ensure software integrity',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.7
-                        ThreatRow(
-                            provisionName: 'Provision 5.7-1',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.7-2',
-                            provisionStatus: 'R F (s)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.8 Ensure that personal data is secure ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.8 Ensure that personal data is secure',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.8
-                        ThreatRow(
-                            provisionName: 'Provision 5.8-1',
-                            provisionStatus: 'R F (t)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.8-2',
-                            provisionStatus: 'M F (u)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.8-3',
-                            provisionStatus: 'M F (v)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.9 Make systems resilient to outages ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.9 Make systems resilient to outages',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.9
-                        ThreatRow(
-                            provisionName: 'Provision 5.9-1',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.9-2',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.9-3',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.10 Examine system telemetry data ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.10 Examine system telemetry data',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Row for Section 5.10
-                        ThreatRow(
-                            provisionName: 'Provision 5.10-1',
-                            provisionStatus: 'R F (w)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.11 Make it easy for users to delete user data ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.11 Make it easy for users to delete user data',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.11
-                        ThreatRow(
-                            provisionName: 'Provision 5.11-1',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.11-2',
-                            provisionStatus: 'R F (x)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.11-3',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.11-4',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.12 Make installation and maintenance of devices easy ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.12 Make installation and maintenance of devices easy',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.12
-                        ThreatRow(
-                            provisionName: 'Provision 5.12-1',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.12-2',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.12-3',
-                            provisionStatus: 'R',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 5.13 Validate input data ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '5.13 Validate input data',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 5.13
-                        ThreatRow(
-                            provisionName: 'Provision 5.13-1A',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 5.13-1B',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-
-                        // --- Section: 6 Data protection provisions for consumer IoT ---
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider before section title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Text(
-                            '6 Data protection provisions for consumer IoT',
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 25, 118, 210)),
-                          ),
-                        ),
-                        Divider(
-                            height: 1.0,
-                            color: Colors.grey), // Divider after section title
-
-                        // Rows for Section 6
-                        ThreatRow(
-                            provisionName: 'Provision 6.1',
-                            provisionStatus: 'M',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 6.2',
-                            provisionStatus: 'M F (y)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 6.3A',
-                            provisionStatus: 'M F (y)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 6.3B',
-                            provisionStatus: 'M F (y)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 6.4',
-                            provisionStatus: 'R F (w)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 6.5',
-                            provisionStatus: 'M F (w)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 6.6',
-                            provisionStatus: 'M F (z)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 6.7',
-                            provisionStatus: 'R F (aa)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        ThreatRow(
-                            provisionName: 'Provision 6.8',
-                            provisionStatus: 'R F (z)',
-                            isHeader: false),
-                        Divider(height: 1.0, color: Colors.grey),
-                        */
-                        for (int i = 0; i < _threatDataList.length; i++)
-                          _buildRowOrHeader(_threatDataList[i], i)
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -1982,7 +1316,7 @@ class _ThreatRowState extends State<ThreatRow> {
                     ),
                   ),
                 ),
-              ),
+              ), // Closes Expanded for Risk Score cell
             ),
             Expanded(
               // Notes cell
