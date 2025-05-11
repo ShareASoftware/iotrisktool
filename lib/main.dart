@@ -164,346 +164,346 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
       // --- Section: 5.0 Reporting implementation ---
       l10n.section_5_0_title,
       ThreatData(
-          provisionName: 'Provision 5.0-1',
+          provisionName: l10n.prov_5_0_1,
           provisionStatus: 'M',
           description: l10n.p_5_0_1_desc),
 
       // --- Subsection: 5.1 No universal default passwords ---
       l10n.section_5_1_title,
       ThreatData(
-          provisionName: 'Provision 5.1-1',
+          provisionName: l10n.prov_5_1_1,
           provisionStatus: 'M F (a)',
           description: l10n.p_5_1_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.1-2',
+          provisionName: l10n.prov_5_1_2,
           provisionStatus: 'M F (b)',
           description: l10n.p_5_1_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.1-2A',
+          provisionName: l10n.prov_5_1_2A,
           provisionStatus: 'R',
           description: l10n.p_5_1_2A_desc),
       ThreatData(
-          provisionName: 'Provision 5.1-3',
+          provisionName: l10n.prov_5_1_3,
           provisionStatus: 'M F (c)',
           description: l10n.p_5_1_3_desc),
       ThreatData(
-          provisionName: 'Provision 5.1-4',
+          provisionName: l10n.prov_5_1_4,
           provisionStatus: 'M F (d)',
           description: l10n.p_5_1_4_desc),
       ThreatData(
-          provisionName: 'Provision 5.1-5',
+          provisionName: l10n.prov_5_1_5,
           provisionStatus: 'M C F (14, e)',
           description: l10n.p_5_1_5_desc),
 
       // --- Section: 5.2 Implement a means to manage reports of vulnerabilities ---
       l10n.section_5_2_title,
       ThreatData(
-          provisionName: 'Provision 5.2-1',
+          provisionName: l10n.prov_5_2_1,
           provisionStatus: 'M',
           description: l10n.p_5_2_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.2-2',
+          provisionName: l10n.prov_5_2_2,
           provisionStatus: 'R',
           description: l10n.p_5_2_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.2-3',
+          provisionName: l10n.prov_5_2_3,
           provisionStatus: 'R',
           description: l10n.p_5_2_3_desc),
 
       // --- Section: 5.3 Keep software updated ---
       l10n.section_5_3_title,
       ThreatData(
-          provisionName: 'Provision 5.3-1',
+          provisionName: l10n.prov_5_3_1,
           provisionStatus: 'R F (f)',
           description: l10n.p_5_3_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-2',
+          provisionName: l10n.prov_5_3_2,
           provisionStatus: 'M C (15)',
           description: l10n.p_5_3_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-3',
+          provisionName: l10n.prov_5_3_3,
           provisionStatus: 'M F (g)',
           description: l10n.p_5_3_3_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-4A',
+          provisionName: l10n.prov_5_3_4A,
           provisionStatus: 'R F (g)',
           description: l10n.p_5_3_4A_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-4B',
+          provisionName: l10n.prov_5_3_4B,
           provisionStatus: 'R F (h)',
           description: l10n.p_5_3_4B_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-5',
+          provisionName: l10n.prov_5_3_5,
           provisionStatus: 'R F (g)',
           description: l10n.p_5_3_5_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-6A',
+          provisionName: l10n.prov_5_3_6A,
           provisionStatus: 'R F (h)',
           description: l10n.p_5_3_6A_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-6B',
+          provisionName: l10n.prov_5_3_6B,
           provisionStatus: 'R F (i)',
           description: l10n.p_5_3_6B_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-7',
+          provisionName: l10n.prov_5_3_7,
           provisionStatus: 'M F (g)',
           description: l10n.p_5_3_7_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-8',
+          provisionName: l10n.prov_5_3_8,
           provisionStatus: 'M C (12)',
           description: l10n.p_5_3_8_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-9',
+          provisionName: l10n.prov_5_3_9,
           provisionStatus: 'R F (g)',
           description: l10n.p_5_3_9_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-10',
+          provisionName: l10n.prov_5_3_10,
           provisionStatus: 'M F (j)',
           description: l10n.p_5_3_10_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-11',
+          provisionName: l10n.prov_5_3_11,
           provisionStatus: 'R C (12)',
           description: l10n.p_5_3_11_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-12',
+          provisionName: l10n.prov_5_3_12,
           provisionStatus: 'R C (12)',
           description: l10n.p_5_3_12_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-13',
+          provisionName: l10n.prov_5_3_13,
           provisionStatus: 'M',
           description: l10n.p_5_3_13_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-14',
+          provisionName: l10n.prov_5_3_14,
           provisionStatus: 'R C (3)',
           description: l10n.p_5_3_14_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-15A',
+          provisionName: l10n.prov_5_3_15A,
           provisionStatus: 'R C (3)',
           description: l10n.p_5_3_15A_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-15B',
+          provisionName: l10n.prov_5_3_15B,
           provisionStatus: 'R C (3)',
           description: l10n.p_5_3_15B_desc),
       ThreatData(
-          provisionName: 'Provision 5.3-16',
+          provisionName: l10n.prov_5_3_16,
           provisionStatus: 'M',
           description: l10n.p_5_3_16_desc),
 
       l10n.section_5_4_title,
       ThreatData(
-          provisionName: 'Provision 5.4-1',
+          provisionName: l10n.prov_5_4_1,
           provisionStatus: 'M F (k)',
           description: l10n.p_5_4_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.4-2',
+          provisionName: l10n.prov_5_4_2,
           provisionStatus: 'M F (l)',
           description: l10n.p_5_4_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.4-3',
+          provisionName: l10n.prov_5_4_3,
           provisionStatus: 'M',
           description: l10n.p_5_4_3_desc),
       ThreatData(
-          provisionName: 'Provision 5.4-4',
+          provisionName: l10n.prov_5_4_4,
           provisionStatus: 'M F (m)',
           description: l10n.p_5_4_4_desc),
 
       l10n.section_5_5_title,
       ThreatData(
-          provisionName: 'Provision 5.5-1',
+          provisionName: l10n.prov_5_5_1,
           provisionStatus: 'M',
           description: l10n.p_5_5_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.5-2',
+          provisionName: l10n.prov_5_5_2,
           provisionStatus: 'R',
           description: l10n.p_5_5_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.5-3',
+          provisionName: l10n.prov_5_5_3,
           provisionStatus: 'R',
           description: l10n.p_5_5_3_desc),
       ThreatData(
-          provisionName: 'Provision 5.5-4',
+          provisionName: l10n.prov_5_5_4,
           provisionStatus: 'R',
           description: l10n.p_5_5_4_desc),
       ThreatData(
-          provisionName: 'Provision 5.5-5',
+          provisionName: l10n.prov_5_5_5,
           provisionStatus: 'M F (n)',
           description: l10n.p_5_5_5_desc),
       ThreatData(
-          provisionName: 'Provision 5.5-6',
+          provisionName: l10n.prov_5_5_6,
           provisionStatus: 'R F (o)',
           description: l10n.p_5_5_6_desc),
       ThreatData(
-          provisionName: 'Provision 5.5-7',
+          provisionName: l10n.prov_5_5_7,
           provisionStatus: 'M F (o)',
           description: l10n.p_5_5_7_desc),
       ThreatData(
-          provisionName: 'Provision 5.5-8',
+          provisionName: l10n.prov_5_5_8,
           provisionStatus: 'M C (16)',
           description: l10n.p_5_5_8_desc),
 
       l10n.section_5_6_title,
       ThreatData(
-          provisionName: 'Provision 5.6-1',
+          provisionName: l10n.prov_5_6_1,
           provisionStatus: 'M F (p)',
           description: l10n.p_5_6_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.6-2',
+          provisionName: l10n.prov_5_6_2,
           provisionStatus: 'M',
           description: l10n.p_5_6_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.6-3',
+          provisionName: l10n.prov_5_6_3,
           provisionStatus: 'R',
           description: l10n.p_5_6_3_desc),
       ThreatData(
-          provisionName: 'Provision 5.6-4A',
+          provisionName: l10n.prov_5_6_4A,
           provisionStatus: 'M F (q)',
           description: l10n.p_5_6_4A_desc),
       ThreatData(
-          provisionName: 'Provision 5.6-4B',
+          provisionName: l10n.prov_5_6_4B,
           provisionStatus: 'R F (r)',
           description: l10n.p_5_6_4B_desc),
       ThreatData(
-          provisionName: 'Provision 5.6-5',
+          provisionName: l10n.prov_5_6_5,
           provisionStatus: 'R',
           description: l10n.p_5_6_5_desc),
       ThreatData(
-          provisionName: 'Provision 5.6-6',
+          provisionName: l10n.prov_5_6_6,
           provisionStatus: 'R',
           description: l10n.p_5_6_6_desc),
       ThreatData(
-          provisionName: 'Provision 5.6-7',
+          provisionName: l10n.prov_5_6_7,
           provisionStatus: 'R',
           description: l10n.p_5_6_7_desc),
       ThreatData(
-          provisionName: 'Provision 5.6-8',
+          provisionName: l10n.prov_5_6_8,
           provisionStatus: 'R',
           description: l10n.p_5_6_8_desc),
       ThreatData(
-          provisionName: 'Provision 5.6-9',
+          provisionName: l10n.prov_5_6_9,
           provisionStatus: 'R',
           description: l10n.p_5_6_9_desc),
 
       l10n.section_5_7_title,
       ThreatData(
-          provisionName: 'Provision 5.7-1',
+          provisionName: l10n.prov_5_7_1,
           provisionStatus: 'R',
           description: l10n.p_5_7_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.7-2',
+          provisionName: l10n.prov_5_7_2,
           provisionStatus: 'R F (s)',
           description: l10n.p_5_7_2_desc),
 
       l10n.section_5_8_title,
       ThreatData(
-          provisionName: 'Provision 5.8-1',
+          provisionName: l10n.prov_5_8_1,
           provisionStatus: 'R F (t)',
           description: l10n.p_5_8_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.8-2',
+          provisionName: l10n.prov_5_8_2,
           provisionStatus: 'M F (u)',
           description: l10n.p_5_8_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.8-3',
+          provisionName: l10n.prov_5_8_3,
           provisionStatus: 'M F (v)',
           description: l10n.p_5_8_3_desc),
 
       l10n.section_5_9_title,
       ThreatData(
-          provisionName: 'Provision 5.9-1',
+          provisionName: l10n.prov_5_9_1,
           provisionStatus: 'R',
           description: l10n.p_5_9_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.9-2',
+          provisionName: l10n.prov_5_9_2,
           provisionStatus: 'R',
           description: l10n.p_5_9_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.9-3',
+          provisionName: l10n.prov_5_9_3,
           provisionStatus: 'R',
           description: l10n.p_5_9_3_desc),
 
       l10n.section_5_10_title,
       ThreatData(
-          provisionName: 'Provision 5.10-1',
+          provisionName: l10n.prov_5_10_1,
           provisionStatus: 'R F (w)',
           description: l10n.p_5_10_1_desc),
 
       l10n.section_5_11_title,
       ThreatData(
-          provisionName: 'Provision 5.11-1',
+          provisionName: l10n.prov_5_11_1,
           provisionStatus: 'M',
           description: l10n.p_5_11_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.11-2',
+          provisionName: l10n.prov_5_11_2,
           provisionStatus: 'R F (x)',
           description: l10n.p_5_11_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.11-3',
+          provisionName: l10n.prov_5_11_3,
           provisionStatus: 'R',
           description: l10n.p_5_11_3_desc),
       ThreatData(
-          provisionName: 'Provision 5.11-4',
+          provisionName: l10n.prov_5_11_4,
           provisionStatus: 'R',
           description: l10n.p_5_11_4_desc),
 
       l10n.section_5_12_title,
       ThreatData(
-          provisionName: 'Provision 5.12-1',
+          provisionName: l10n.prov_5_12_1,
           provisionStatus: 'R',
           description: l10n.p_5_12_1_desc),
       ThreatData(
-          provisionName: 'Provision 5.12-2',
+          provisionName: l10n.prov_5_12_2,
           provisionStatus: 'R',
           description: l10n.p_5_12_2_desc),
       ThreatData(
-          provisionName: 'Provision 5.12-3',
+          provisionName: l10n.prov_5_12_3,
           provisionStatus: 'R',
           description: l10n.p_5_12_3_desc),
 
       l10n.section_5_13_title,
       ThreatData(
-          provisionName: 'Provision 5.13-1A',
+          provisionName: l10n.prov_5_13_1A,
           provisionStatus: 'M',
           description: l10n.p_5_13_1A_desc),
       ThreatData(
-          provisionName: 'Provision 5.13-1B',
+          provisionName: l10n.prov_5_13_1B,
           provisionStatus: 'M',
           description: l10n.p_5_13_1B_desc),
 
       l10n.section_6_title,
       ThreatData(
-          provisionName: 'Provision 6.1',
+          provisionName: l10n.prov_6_1,
           provisionStatus: 'M',
           description: l10n.p_6_1_desc),
       ThreatData(
-          provisionName: 'Provision 6.2',
+          provisionName: l10n.prov_6_2,
           provisionStatus: 'M F (y)',
           description: l10n.p_6_2_desc),
       ThreatData(
-          provisionName: 'Provision 6.3A',
+          provisionName: l10n.prov_6_3A,
           provisionStatus: 'M F (y)',
           description: l10n.p_6_3A_desc),
       ThreatData(
-          provisionName: 'Provision 6.3B',
+          provisionName: l10n.prov_6_3B,
           provisionStatus: 'M F (y)',
           description: l10n.p_6_3B_desc),
       ThreatData(
-          provisionName: 'Provision 6.4',
+          provisionName: l10n.prov_6_4,
           provisionStatus: 'R F (w)',
           description: l10n.p_6_4_desc),
       ThreatData(
-          provisionName: 'Provision 6.5',
+          provisionName: l10n.prov_6_5,
           provisionStatus: 'M F (w)',
           description: l10n.p_6_5_desc),
       ThreatData(
-          provisionName: 'Provision 6.6',
+          provisionName: l10n.prov_6_6,
           provisionStatus: 'M F (z)',
           description: l10n.p_6_6_desc),
       ThreatData(
-          provisionName: 'Provision 6.7',
+          provisionName: l10n.prov_6_7,
           provisionStatus: 'R F (aa)',
           description: l10n.p_6_7_desc),
       ThreatData(
-          provisionName: 'Provision 6.8',
+          provisionName: l10n.prov_6_8,
           provisionStatus: 'R F (z)',
           description: l10n.p_6_8_desc),
       // Add more ThreatData objects for each threat from the standard
