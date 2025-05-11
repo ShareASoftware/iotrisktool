@@ -1,6 +1,6 @@
 {
-    "name": "etsi_threat_assessment",
-    "short_name": "etsi_threat_assessment",
+    "name": "iotrisktool",
+    "short_name": "iotrisktool",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

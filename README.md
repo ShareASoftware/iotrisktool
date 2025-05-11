@@ -78,7 +78,7 @@ To ensure consistency and avoid conflicts with other Flutter projects or global 
 1.  **Clone the Repository:**
     ```bash
     git clone https://github.com/<your-github-username>/<your-repo-name>.git
-    cd <your-repo-name> # Or the specific project directory, e.g., etsi_threat_assessment
+    cd <your-repo-name> # Or the specific project directory, e.g., iotrisktool
     ```
     Replace `<your-github-username>/<your-repo-name>.git` with the actual URL of your GitHub repository and `<your-repo-name>` with the directory name created by the clone.
 
@@ -149,7 +149,7 @@ To ensure consistency and avoid conflicts with other Flutter projects or global 
     ```
 
 *   **For Desktop (Release - after building):**
-    Navigate to the build output directory (e.g., `build/windows/runner/Release/`) and run the generated executable file (e.g., `etsi_threat_assessment.exe`).
+    Navigate to the build output directory (e.g., `build/windows/runner/Release/`) and run the generated executable file (e.g., `iotrisktool.exe`).
 
 ## Localization
 

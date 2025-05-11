@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 // Import PDF generation packages
+import 'package:flutter/services.dart'; // For Clipboard
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 // Import localization packages
+import 'dart:ui' as ui; // For PlatformDispatcher
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Generated file
 
@@ -26,7 +28,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _locale = const Locale('en'); // Default locale
+  Locale _locale = const Locale('en'); // Default locale, will be updated
+
+  @override
+  void initState() {
+    super.initState();
+    _setInitialLocale();
+  }
+
+  void _setInitialLocale() {
+    final ui.Locale systemLocale = ui.PlatformDispatcher.instance.locale;
+    _locale = AppLocalizations.supportedLocales.firstWhere(
+        (sl) => sl.languageCode == systemLocale.languageCode,
+        orElse: () => const Locale('en')); // Fallback to English
+  }
 
   void changeLocale(Locale locale) {
     setState(() {
@@ -126,20 +141,17 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
   // Controller and variable for Product Name
   final TextEditingController _productNameController = TextEditingController();
   String _productName = '';
-  // bool _isLoading = true; // State variable for loading indicator - Removed as data is static and loaded synchronously.
 
-  // List to hold the state of all threat rows - will be initialized in didChangeDependencies
-  late List<dynamic> _threatDataList;
+  // State variables for loading
+  List<dynamic> _threatDataList = []; // Initialize to empty
+  bool _isLoading = true; // Start in loading state
+  double _loadingProgress = 0.0;
   bool _threatDataInitialized =
       false; // Flag to ensure initialization happens once
 
   @override
   void initState() {
     super.initState();
-    // The _isLoading state and Future.delayed have been removed because _threatDataList
-    // is initialized synchronously. Displaying a loader here was artificial.
-    // If data were truly loaded asynchronously in the future,
-    // using a FutureBuilder would be a more appropriate pattern.
     // Listen to changes in the product name field
     _productNameController.addListener(() {
       if (mounted) {
@@ -148,37 +160,66 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
         });
       }
     });
+    // Trigger the first data load after the initial frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !_threatDataInitialized) {
+        _performDataLoading();
+      }
+    });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Initialize _threatDataList here because it needs AppLocalizations from context
-    if (!_threatDataInitialized) {
-      final l10n = AppLocalizations.of(context)!;
-      _initializeThreatDataList(l10n);
-      _threatDataInitialized = true;
-    }
+    // The initial load is now primarily handled by initState's postFrameCallback.
+    // This method is kept for completeness. If, for some reason, initState's
+    // callback didn't run or data isn't initialized, this could be a fallback.
+    // However, with the current setup, initState should handle the first load.
   }
 
   @override
   void didUpdateWidget(ThreatAssessmentPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Check if the locale passed from MyApp has changed
     if (widget.currentLocale != oldWidget.currentLocale) {
       // Locale has changed, re-initialize the threat data list
-      // AppLocalizations.of(context) will now provide translations for the new locale
-      final l10n = AppLocalizations.of(context)!;
-      setState(() {
-        // Call setState to trigger a rebuild with the new data
-        _initializeThreatDataList(l10n);
-      });
-      _threatDataInitialized = true;
+      _performDataLoading(); // This will show the loading screen and reload data
     }
   }
 
-  void _initializeThreatDataList(AppLocalizations l10n) {
-    _threatDataList = [
+  Future<void> _performDataLoading() async {
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = true;
+      _loadingProgress = 0.0;
+      // _threatDataList = []; // Optionally clear old data, or let it be replaced
+    });
+
+    // Ensure AppLocalizations is available
+    final l10n = AppLocalizations.of(context)!;
+    await _constructAndPopulateThreatDataList(l10n, (progress) {
+      if (mounted) {
+        setState(() {
+          _loadingProgress = progress;
+        });
+      }
+    });
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+        _threatDataInitialized = true; // Mark that a full load has completed
+      });
+    }
+  }
+
+  // This method replaces the old synchronous _initializeThreatDataList
+  Future<void> _constructAndPopulateThreatDataList(
+      AppLocalizations l10n, Function(double) onProgress) async {
+    List<dynamic> newItems = [];
+
+    // Define all items to be added, mirroring the structure of your old _initializeThreatDataList
+    final List<dynamic> allItemsBlueprint = [
       // --- Section: 5.0 Reporting implementation ---
       l10n.section_5_0_title,
       ThreatData(
@@ -526,6 +567,32 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
           description: l10n.p_6_8_desc),
       // Add more ThreatData objects for each threat from the standard
     ];
+
+    int totalItems = allItemsBlueprint.length;
+    if (totalItems == 0) {
+      if (mounted) {
+        // Check mounted before setState
+        setState(() {
+          _threatDataList = []; // Ensure it's empty if blueprint is empty
+        });
+      }
+      onProgress(1.0);
+      return;
+    }
+
+    for (int i = 0; i < totalItems; i++) {
+      if (!mounted) return; // Stop if widget is disposed during the loop
+      newItems.add(allItemsBlueprint[i]);
+      onProgress((i + 1) / totalItems);
+      // Add a small delay to make the progress bar visible and allow UI to update.
+      await Future.delayed(
+          const Duration(milliseconds: 5)); // Adjust duration if needed
+    }
+
+    if (mounted) {
+      // Assign the fully constructed list to the state variable
+      _threatDataList = newItems;
+    }
   }
 
   @override
@@ -650,8 +717,26 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
   }
 
   // Placeholder function for creating a shareable link
-  void _createShareLink() {
-    // TODO: Implement shareable link logic here.
+  Future<void> _createShareLink() async {
+    final l10n = AppLocalizations.of(context)!;
+    const String staticLink = "https://iotrisktool.com/";
+
+    // 1. Construct the new URI (now static)
+    // final newUri = Uri.base.replace(queryParameters: queryParameters); // Old dynamic link
+    final newUri = Uri.parse(staticLink); // New static link
+
+    // 4. Copy to clipboard
+    await Clipboard.setData(ClipboardData(text: newUri.toString()));
+    // Or directly:
+    // await Clipboard.setData(const ClipboardData(text: staticLink));
+
+    // 5. Show SnackBar confirmation
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.linkCopiedMessage),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   // Callback function for ThreatRow to update the state
@@ -669,17 +754,41 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!; // Get localizations instance
+    final l10n = AppLocalizations.of(context)!;
+
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.appTitle), // Use l10n here for AppBar title
+          centerTitle: true,
+          actions: [_buildLanguageDropdown(context)],
+          backgroundColor: Colors.blue[700],
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const CircularProgressIndicator(),
+              const SizedBox(height: 20),
+              Text(
+                '${l10n.loadingMessage} ${(_loadingProgress * 100).toStringAsFixed(0)}%',
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Main content of the page once loading is complete
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.appTitle),
+        title: Text(l10n.appTitle), // Use l10n here
         centerTitle: true,
-        actions: [_buildLanguageDropdown(context)], // Add dropdown here
+        actions: [_buildLanguageDropdown(context)],
         backgroundColor: Colors.blue[700],
       ),
       body: SingleChildScrollView(
-        // Removed _isLoading check, content is shown directly
-        // Allows scrolling if content overflows
         padding: const EdgeInsets.symmetric(
             horizontal: 10.0, vertical: 15.0), // Adjusted padding
         child: Center(
@@ -690,7 +799,6 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  // Removed const
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Column(
                     children: [
@@ -727,7 +835,6 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                   child: TextField(
                     controller: _productNameController,
                     decoration: InputDecoration(
-                      // Removed const
                       labelText: l10n.productNameLabel, // Use localized string
                       border: const OutlineInputBorder(),
                     ),
@@ -788,7 +895,6 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                   ),
                 ),
                 Padding(
-                  // Removed const
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
                     l10n.riskScoreCalculationNote, // Use localized string
@@ -799,7 +905,6 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
                 ),
                 // Added Notes Section
                 Padding(
-                  // Removed const
                   padding:
                       const EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
                   child: Column(
@@ -884,7 +989,7 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
 
   // Widget to build the language selection dropdown
   Widget _buildLanguageDropdown(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!; // Get localizations instance
+    final l10n = AppLocalizations.of(context)!;
     // Get the current language code
     final currentLanguageCode = Localizations.localeOf(context).languageCode;
     // Find the exact Locale object from the supported list that matches the current language code
@@ -1188,9 +1293,14 @@ class _ThreatRowState extends State<ThreatRow> {
                 child: DropdownButton<String>(
                   isExpanded: true, // Make dropdown take full width
                   value: _selectedApplicable, // Use local state for display
-                  items: const [
-                    DropdownMenuItem(value: 'na', child: Text('N/A')),
-                    DropdownMenuItem(value: 'yes', child: Text('Yes')),
+                  items: [
+                    // Removed const
+                    const DropdownMenuItem(
+                        value: 'na',
+                        child: Text(
+                            'N/A')), // N/A usually doesn't need translation in this context
+                    DropdownMenuItem(
+                        value: 'yes', child: Text(l10n.applicableYes)),
                   ],
                   onChanged: (String? newValue) {
                     if (newValue != null) {
@@ -1213,11 +1323,14 @@ class _ThreatRowState extends State<ThreatRow> {
                 child: DropdownButton<String>(
                   isExpanded: true,
                   value: _selectedLikelihood, // Use local state
-                  items: const [
-                    DropdownMenuItem(value: 'na', child: Text('N/A')),
-                    DropdownMenuItem(value: 'low', child: Text('Low')),
-                    DropdownMenuItem(value: 'medium', child: Text('Medium')),
-                    DropdownMenuItem(value: 'high', child: Text('High')),
+                  items: [
+                    // Removed const
+                    const DropdownMenuItem(value: 'na', child: Text('N/A')),
+                    DropdownMenuItem(value: 'low', child: Text(l10n.levelLow)),
+                    DropdownMenuItem(
+                        value: 'medium', child: Text(l10n.levelMedium)),
+                    DropdownMenuItem(
+                        value: 'high', child: Text(l10n.levelHigh)),
                   ],
                   onChanged: (String? newValue) {
                     if (newValue != null) {
@@ -1239,11 +1352,14 @@ class _ThreatRowState extends State<ThreatRow> {
                 child: DropdownButton<String>(
                   isExpanded: true,
                   value: _selectedImpact, // Use local state
-                  items: const [
-                    DropdownMenuItem(value: 'na', child: Text('N/A')),
-                    DropdownMenuItem(value: 'low', child: Text('Low')),
-                    DropdownMenuItem(value: 'medium', child: Text('Medium')),
-                    DropdownMenuItem(value: 'high', child: Text('High')),
+                  items: [
+                    // Removed const
+                    const DropdownMenuItem(value: 'na', child: Text('N/A')),
+                    DropdownMenuItem(value: 'low', child: Text(l10n.levelLow)),
+                    DropdownMenuItem(
+                        value: 'medium', child: Text(l10n.levelMedium)),
+                    DropdownMenuItem(
+                        value: 'high', child: Text(l10n.levelHigh)),
                   ],
                   onChanged: (String? newValue) {
                     if (newValue != null) {
@@ -1264,12 +1380,14 @@ class _ThreatRowState extends State<ThreatRow> {
                 child: DropdownButton<String>(
                   isExpanded: true,
                   value: _selectedStatus, // Use local state
-                  items: const [
-                    DropdownMenuItem(value: 'open', child: Text('Open')),
+                  items: [
+                    // Removed const
                     DropdownMenuItem(
-                        value: 'mitigated', child: Text('Mitigated')),
+                        value: 'open', child: Text(l10n.statusOpen)),
                     DropdownMenuItem(
-                        value: 'accepted', child: Text('Accepted')),
+                        value: 'mitigated', child: Text(l10n.statusMitigated)),
+                    DropdownMenuItem(
+                        value: 'accepted', child: Text(l10n.statusAccepted)),
                   ],
                   onChanged: (String? newValue) {
                     if (newValue != null) {
