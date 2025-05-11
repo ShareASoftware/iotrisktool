@@ -126,367 +126,10 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
   String _productName = '';
   // bool _isLoading = true; // State variable for loading indicator - Removed as data is static and loaded synchronously.
 
-  // List to hold the state of all threat rows
-// Using List<dynamic> to store Strings (headers) and ThreatData objects
-  final List<dynamic> _threatDataList = [
-    // --- Section: 5.0 Reporting implementation ---
-    '5.0 Reporting implementation',
-    ThreatData(
-        provisionName: 'Provision 5.0-1',
-        provisionStatus: 'M',
-        description: 'Reporting implementation details'),
-
-    // --- Subsection: 5.1 No universal default passwords ---
-    '5.1 No universal default passwords',
-    ThreatData(
-        provisionName: 'Provision 5.1-1',
-        provisionStatus: 'M F (a)',
-        description: 'No universal default passwords'),
-    ThreatData(
-        provisionName: 'Provision 5.1-2',
-        provisionStatus: 'M F (b)',
-        description: 'Unique per-device passwords'),
-    ThreatData(
-        provisionName: 'Provision 5.1-2A',
-        provisionStatus: 'R',
-        description: 'Password complexity'),
-    ThreatData(
-        provisionName: 'Provision 5.1-3',
-        provisionStatus: 'M F (c)',
-        description: 'Authentication mechanism strength'),
-    ThreatData(
-        provisionName: 'Provision 5.1-4',
-        provisionStatus: 'M F (d)',
-        description: 'User guidance on password change'),
-    ThreatData(
-        provisionName: 'Provision 5.1-5',
-        provisionStatus: 'M C F (14, e)',
-        description: 'Brute-force mitigation'),
-
-    // --- Section: 5.2 Implement a means to manage reports of vulnerabilities ---
-    '5.2 Implement a means to manage reports of vulnerabilities',
-    ThreatData(
-        provisionName: 'Provision 5.2-1',
-        provisionStatus: 'M',
-        description: 'Vulnerability disclosure policy'),
-    ThreatData(
-        provisionName: 'Provision 5.2-2',
-        provisionStatus: 'R',
-        description: 'Contact point for reporting'),
-    ThreatData(
-        provisionName: 'Provision 5.2-3',
-        provisionStatus: 'R',
-        description: 'Acknowledgement of reports'),
-
-    // --- Section: 5.3 Keep software updated ---
-    '5.3 Keep software updated',
-    ThreatData(
-        provisionName: 'Provision 5.3-1',
-        provisionStatus: 'R F (f)',
-        description: 'Update policy definition'),
-    ThreatData(
-        provisionName: 'Provision 5.3-2',
-        provisionStatus: 'M C (15)',
-        description: 'Update mechanism'),
-    ThreatData(
-        provisionName: 'Provision 5.3-3',
-        provisionStatus: 'M F (g)',
-        description: 'Timely updates'),
-    ThreatData(
-        provisionName: 'Provision 5.3-4A',
-        provisionStatus: 'R F (g)',
-        description: 'Update availability notification'),
-    ThreatData(
-        provisionName: 'Provision 5.3-4B',
-        provisionStatus: 'R F (h)',
-        description: 'Automatic update option'),
-    ThreatData(
-        provisionName: 'Provision 5.3-5',
-        provisionStatus: 'R F (g)',
-        description: 'User control over updates'),
-    ThreatData(
-        provisionName: 'Provision 5.3-6A',
-        provisionStatus: 'R F (h)',
-        description: 'Update failure handling'),
-    ThreatData(
-        provisionName: 'Provision 5.3-6B',
-        provisionStatus: 'R F (i)',
-        description: 'Update notification details'),
-    ThreatData(
-        provisionName: 'Provision 5.3-7',
-        provisionStatus: 'M F (g)',
-        description: 'Update integrity verification'),
-    ThreatData(
-        provisionName: 'Provision 5.3-8',
-        provisionStatus: 'M C (12)',
-        description: 'Update authenticity verification'),
-    ThreatData(
-        provisionName: 'Provision 5.3-9',
-        provisionStatus: 'R F (g)',
-        description: 'Rollback mechanism'),
-    ThreatData(
-        provisionName: 'Provision 5.3-10',
-        provisionStatus: 'M F (j)',
-        description: 'Secure update delivery'),
-    ThreatData(
-        provisionName: 'Provision 5.3-11',
-        provisionStatus: 'R C (12)',
-        description: 'Update confidentiality'),
-    ThreatData(
-        provisionName: 'Provision 5.3-12',
-        provisionStatus: 'R C (12)',
-        description: 'Update source authentication'),
-    ThreatData(
-        provisionName: 'Provision 5.3-13',
-        provisionStatus: 'M',
-        description: 'Software component inventory'),
-    ThreatData(
-        provisionName: 'Provision 5.3-14',
-        provisionStatus: 'R C (3)',
-        description: 'Handling non-updateable components'),
-    ThreatData(
-        provisionName: 'Provision 5.3-15A',
-        provisionStatus: 'R C (3)',
-        description: 'Security implications of non-updateable components'),
-    ThreatData(
-        provisionName: 'Provision 5.3-15B',
-        provisionStatus: 'R C (3)',
-        description: 'User information on non-updateable components'),
-    ThreatData(
-        provisionName: 'Provision 5.3-16',
-        provisionStatus: 'M',
-        description: 'End-of-life policy'),
-
-    // --- Section: 5.4 Securely store sensitive security parameters ---
-    '5.4 Securely store sensitive security parameters',
-    ThreatData(
-        provisionName: 'Provision 5.4-1',
-        provisionStatus: 'M F (k)',
-        description: 'Storage protection'),
-    ThreatData(
-        provisionName: 'Provision 5.4-2',
-        provisionStatus: 'M F (l)',
-        description: 'Protection of hard-coded secrets'),
-    ThreatData(
-        provisionName: 'Provision 5.4-3',
-        provisionStatus: 'M',
-        description: 'Use of hardware security features'),
-    ThreatData(
-        provisionName: 'Provision 5.4-4',
-        provisionStatus: 'M F (m)',
-        description: 'Protection during transit/use'),
-
-    // --- Section: 5.5 Communicate securely ---
-    '5.5 Communicate securely',
-    ThreatData(
-        provisionName: 'Provision 5.5-1',
-        provisionStatus: 'M',
-        description: 'Use of secure protocols'),
-    ThreatData(
-        provisionName: 'Provision 5.5-2',
-        provisionStatus: 'R',
-        description: 'Protocol selection justification'),
-    ThreatData(
-        provisionName: 'Provision 5.5-3',
-        provisionStatus: 'R',
-        description: 'Cipher suite selection'),
-    ThreatData(
-        provisionName: 'Provision 5.5-4',
-        provisionStatus: 'R',
-        description: 'Certificate validation'),
-    ThreatData(
-        provisionName: 'Provision 5.5-5',
-        provisionStatus: 'M F (n)',
-        description: 'Secure configuration changes'),
-    ThreatData(
-        provisionName: 'Provision 5.5-6',
-        provisionStatus: 'R F (o)',
-        description: 'Secure transmission of critical parameters'),
-    ThreatData(
-        provisionName: 'Provision 5.5-7',
-        provisionStatus: 'M F (o)',
-        description: 'Protection of critical parameters in transit'),
-    ThreatData(
-        provisionName: 'Provision 5.5-8',
-        provisionStatus: 'M C (16)',
-        description: 'Secure storage of communication keys'),
-
-    // --- Section: 5.6 Minimize exposed attack surfaces ---
-    '5.6 Minimize exposed attack surfaces',
-    ThreatData(
-        provisionName: 'Provision 5.6-1',
-        provisionStatus: 'M F (p)',
-        description: 'Disable unused interfaces'),
-    ThreatData(
-        provisionName: 'Provision 5.6-2',
-        provisionStatus: 'M',
-        description: 'Minimize network services'),
-    ThreatData(
-        provisionName: 'Provision 5.6-3',
-        provisionStatus: 'R',
-        description: 'Justification for open ports'),
-    ThreatData(
-        provisionName: 'Provision 5.6-4A',
-        provisionStatus: 'M F (q)',
-        description: 'Disable debug interfaces'),
-    ThreatData(
-        provisionName: 'Provision 5.6-4B',
-        provisionStatus: 'R F (r)',
-        description: 'Secure physical debug interfaces'),
-    ThreatData(
-        provisionName: 'Provision 5.6-5',
-        provisionStatus: 'R',
-        description: 'Limit service privileges'),
-    ThreatData(
-        provisionName: 'Provision 5.6-6',
-        provisionStatus: 'R',
-        description: 'Input validation'),
-    ThreatData(
-        provisionName: 'Provision 5.6-7',
-        provisionStatus: 'R',
-        description: 'Resource management'),
-    ThreatData(
-        provisionName: 'Provision 5.6-8',
-        provisionStatus: 'R',
-        description: 'Secure default configuration'),
-    ThreatData(
-        provisionName: 'Provision 5.6-9',
-        provisionStatus: 'R',
-        description: 'Documentation of attack surface'),
-
-    // --- Section: 5.7 Ensure software integrity ---
-    '5.7 Ensure software integrity',
-    ThreatData(
-        provisionName: 'Provision 5.7-1',
-        provisionStatus: 'R',
-        description: 'Secure boot mechanism'),
-    ThreatData(
-        provisionName: 'Provision 5.7-2',
-        provisionStatus: 'R F (s)',
-        description: 'Runtime integrity protection'),
-
-    // --- Section: 5.8 Ensure that personal data is secure ---
-    '5.8 Ensure that personal data is secure',
-    ThreatData(
-        provisionName: 'Provision 5.8-1',
-        provisionStatus: 'R F (t)',
-        description: 'Data minimization'),
-    ThreatData(
-        provisionName: 'Provision 5.8-2',
-        provisionStatus: 'M F (u)',
-        description: 'Secure storage of personal data'),
-    ThreatData(
-        provisionName: 'Provision 5.8-3',
-        provisionStatus: 'M F (v)',
-        description: 'Secure processing of personal data'),
-
-    // --- Section: 5.9 Make systems resilient to outages ---
-    '5.9 Make systems resilient to outages',
-    ThreatData(
-        provisionName: 'Provision 5.9-1',
-        provisionStatus: 'R',
-        description: 'Handling network outages'),
-    ThreatData(
-        provisionName: 'Provision 5.9-2',
-        provisionStatus: 'R',
-        description: 'Handling power outages'),
-    ThreatData(
-        provisionName: 'Provision 5.9-3',
-        provisionStatus: 'R',
-        description: 'Recovery mechanisms'),
-
-    // --- Section: 5.10 Examine system telemetry data ---
-    '5.10 Examine system telemetry data',
-    ThreatData(
-        provisionName: 'Provision 5.10-1',
-        provisionStatus: 'R F (w)',
-        description: 'Telemetry data analysis'),
-
-    // --- Section: 5.11 Make it easy for users to delete user data ---
-    '5.11 Make it easy for users to delete user data',
-    ThreatData(
-        provisionName: 'Provision 5.11-1',
-        provisionStatus: 'M',
-        description: 'Data deletion mechanism (device)'),
-    ThreatData(
-        provisionName: 'Provision 5.11-2',
-        provisionStatus: 'R F (x)',
-        description: 'Data deletion mechanism (service)'),
-    ThreatData(
-        provisionName: 'Provision 5.11-3',
-        provisionStatus: 'R',
-        description: 'User guidance on data deletion'),
-    ThreatData(
-        provisionName: 'Provision 5.11-4',
-        provisionStatus: 'R',
-        description: 'Confirmation of deletion'),
-
-    // --- Section: 5.12 Make installation and maintenance of devices easy ---
-    '5.12 Make installation and maintenance of devices easy',
-    ThreatData(
-        provisionName: 'Provision 5.12-1',
-        provisionStatus: 'R',
-        description: 'Clear installation instructions'),
-    ThreatData(
-        provisionName: 'Provision 5.12-2',
-        provisionStatus: 'R',
-        description: 'Clear maintenance instructions'),
-    ThreatData(
-        provisionName: 'Provision 5.12-3',
-        provisionStatus: 'R',
-        description: 'Secure disposal instructions'),
-
-    // --- Section: 5.13 Validate input data ---
-    '5.13 Validate input data',
-    ThreatData(
-        provisionName: 'Provision 5.13-1A',
-        provisionStatus: 'M',
-        description: 'Input validation (network)'),
-    ThreatData(
-        provisionName: 'Provision 5.13-1B',
-        provisionStatus: 'M',
-        description: 'Input validation (local)'),
-
-    // --- Section: 6 Data protection provisions for consumer IoT ---
-    '6 Data protection provisions for consumer IoT',
-    ThreatData(
-        provisionName: 'Provision 6.1',
-        provisionStatus: 'M',
-        description: 'Privacy policy'),
-    ThreatData(
-        provisionName: 'Provision 6.2',
-        provisionStatus: 'M F (y)',
-        description: 'Consent mechanism'),
-    ThreatData(
-        provisionName: 'Provision 6.3A',
-        provisionStatus: 'M F (y)',
-        description: 'Withdrawal of consent'),
-    ThreatData(
-        provisionName: 'Provision 6.3B',
-        provisionStatus: 'M F (y)',
-        description: 'Effect of consent withdrawal'),
-    ThreatData(
-        provisionName: 'Provision 6.4',
-        provisionStatus: 'R F (w)',
-        description: 'Purpose limitation (telemetry)'),
-    ThreatData(
-        provisionName: 'Provision 6.5',
-        provisionStatus: 'M F (w)',
-        description: 'Transparency (telemetry)'),
-    ThreatData(
-        provisionName: 'Provision 6.6',
-        provisionStatus: 'M F (z)',
-        description: 'Transparency (data processing)'),
-    ThreatData(
-        provisionName: 'Provision 6.7',
-        provisionStatus: 'R F (aa)',
-        description: 'Data aggregation/anonymization'),
-    ThreatData(
-        provisionName: 'Provision 6.8',
-        provisionStatus: 'R F (z)',
-        description: 'User access to data'),
-    // Add more ThreatData objects for each threat from the standard
-  ];
+  // List to hold the state of all threat rows - will be initialized in didChangeDependencies
+  late List<dynamic> _threatDataList;
+  bool _threatDataInitialized =
+      false; // Flag to ensure initialization happens once
 
   @override
   void initState() {
@@ -503,6 +146,368 @@ class _ThreatAssessmentPageState extends State<ThreatAssessmentPage> {
         });
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Initialize _threatDataList here because it needs AppLocalizations from context
+    if (!_threatDataInitialized) {
+      final l10n = AppLocalizations.of(context)!;
+      _initializeThreatDataList(l10n);
+      _threatDataInitialized = true;
+    }
+  }
+
+  void _initializeThreatDataList(AppLocalizations l10n) {
+    _threatDataList = [
+      // --- Section: 5.0 Reporting implementation ---
+      l10n.section_5_0_title,
+      ThreatData(
+          provisionName: 'Provision 5.0-1',
+          provisionStatus: 'M',
+          description: l10n.p_5_0_1_desc),
+
+      // --- Subsection: 5.1 No universal default passwords ---
+      l10n.section_5_1_title,
+      ThreatData(
+          provisionName: 'Provision 5.1-1',
+          provisionStatus: 'M F (a)',
+          description: l10n.p_5_1_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.1-2',
+          provisionStatus: 'M F (b)',
+          description: l10n.p_5_1_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.1-2A',
+          provisionStatus: 'R',
+          description: l10n.p_5_1_2A_desc),
+      ThreatData(
+          provisionName: 'Provision 5.1-3',
+          provisionStatus: 'M F (c)',
+          description: l10n.p_5_1_3_desc),
+      ThreatData(
+          provisionName: 'Provision 5.1-4',
+          provisionStatus: 'M F (d)',
+          description: l10n.p_5_1_4_desc),
+      ThreatData(
+          provisionName: 'Provision 5.1-5',
+          provisionStatus: 'M C F (14, e)',
+          description: l10n.p_5_1_5_desc),
+
+      // --- Section: 5.2 Implement a means to manage reports of vulnerabilities ---
+      l10n.section_5_2_title,
+      ThreatData(
+          provisionName: 'Provision 5.2-1',
+          provisionStatus: 'M',
+          description: l10n.p_5_2_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.2-2',
+          provisionStatus: 'R',
+          description: l10n.p_5_2_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.2-3',
+          provisionStatus: 'R',
+          description: l10n.p_5_2_3_desc),
+
+      // --- Section: 5.3 Keep software updated ---
+      l10n.section_5_3_title,
+      ThreatData(
+          provisionName: 'Provision 5.3-1',
+          provisionStatus: 'R F (f)',
+          description: l10n.p_5_3_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-2',
+          provisionStatus: 'M C (15)',
+          description: l10n.p_5_3_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-3',
+          provisionStatus: 'M F (g)',
+          description: l10n.p_5_3_3_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-4A',
+          provisionStatus: 'R F (g)',
+          description: l10n.p_5_3_4A_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-4B',
+          provisionStatus: 'R F (h)',
+          description: l10n.p_5_3_4B_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-5',
+          provisionStatus: 'R F (g)',
+          description: l10n.p_5_3_5_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-6A',
+          provisionStatus: 'R F (h)',
+          description: l10n.p_5_3_6A_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-6B',
+          provisionStatus: 'R F (i)',
+          description: l10n.p_5_3_6B_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-7',
+          provisionStatus: 'M F (g)',
+          description: l10n.p_5_3_7_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-8',
+          provisionStatus: 'M C (12)',
+          description: l10n.p_5_3_8_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-9',
+          provisionStatus: 'R F (g)',
+          description: l10n.p_5_3_9_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-10',
+          provisionStatus: 'M F (j)',
+          description: l10n.p_5_3_10_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-11',
+          provisionStatus: 'R C (12)',
+          description: l10n.p_5_3_11_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-12',
+          provisionStatus: 'R C (12)',
+          description: l10n.p_5_3_12_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-13',
+          provisionStatus: 'M',
+          description: l10n.p_5_3_13_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-14',
+          provisionStatus: 'R C (3)',
+          description: l10n.p_5_3_14_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-15A',
+          provisionStatus: 'R C (3)',
+          description: l10n.p_5_3_15A_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-15B',
+          provisionStatus: 'R C (3)',
+          description: l10n.p_5_3_15B_desc),
+      ThreatData(
+          provisionName: 'Provision 5.3-16',
+          provisionStatus: 'M',
+          description: l10n.p_5_3_16_desc),
+
+      l10n.section_5_4_title,
+      ThreatData(
+          provisionName: 'Provision 5.4-1',
+          provisionStatus: 'M F (k)',
+          description: l10n.p_5_4_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.4-2',
+          provisionStatus: 'M F (l)',
+          description: l10n.p_5_4_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.4-3',
+          provisionStatus: 'M',
+          description: l10n.p_5_4_3_desc),
+      ThreatData(
+          provisionName: 'Provision 5.4-4',
+          provisionStatus: 'M F (m)',
+          description: l10n.p_5_4_4_desc),
+
+      l10n.section_5_5_title,
+      ThreatData(
+          provisionName: 'Provision 5.5-1',
+          provisionStatus: 'M',
+          description: l10n.p_5_5_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.5-2',
+          provisionStatus: 'R',
+          description: l10n.p_5_5_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.5-3',
+          provisionStatus: 'R',
+          description: l10n.p_5_5_3_desc),
+      ThreatData(
+          provisionName: 'Provision 5.5-4',
+          provisionStatus: 'R',
+          description: l10n.p_5_5_4_desc),
+      ThreatData(
+          provisionName: 'Provision 5.5-5',
+          provisionStatus: 'M F (n)',
+          description: l10n.p_5_5_5_desc),
+      ThreatData(
+          provisionName: 'Provision 5.5-6',
+          provisionStatus: 'R F (o)',
+          description: l10n.p_5_5_6_desc),
+      ThreatData(
+          provisionName: 'Provision 5.5-7',
+          provisionStatus: 'M F (o)',
+          description: l10n.p_5_5_7_desc),
+      ThreatData(
+          provisionName: 'Provision 5.5-8',
+          provisionStatus: 'M C (16)',
+          description: l10n.p_5_5_8_desc),
+
+      l10n.section_5_6_title,
+      ThreatData(
+          provisionName: 'Provision 5.6-1',
+          provisionStatus: 'M F (p)',
+          description: l10n.p_5_6_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.6-2',
+          provisionStatus: 'M',
+          description: l10n.p_5_6_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.6-3',
+          provisionStatus: 'R',
+          description: l10n.p_5_6_3_desc),
+      ThreatData(
+          provisionName: 'Provision 5.6-4A',
+          provisionStatus: 'M F (q)',
+          description: l10n.p_5_6_4A_desc),
+      ThreatData(
+          provisionName: 'Provision 5.6-4B',
+          provisionStatus: 'R F (r)',
+          description: l10n.p_5_6_4B_desc),
+      ThreatData(
+          provisionName: 'Provision 5.6-5',
+          provisionStatus: 'R',
+          description: l10n.p_5_6_5_desc),
+      ThreatData(
+          provisionName: 'Provision 5.6-6',
+          provisionStatus: 'R',
+          description: l10n.p_5_6_6_desc),
+      ThreatData(
+          provisionName: 'Provision 5.6-7',
+          provisionStatus: 'R',
+          description: l10n.p_5_6_7_desc),
+      ThreatData(
+          provisionName: 'Provision 5.6-8',
+          provisionStatus: 'R',
+          description: l10n.p_5_6_8_desc),
+      ThreatData(
+          provisionName: 'Provision 5.6-9',
+          provisionStatus: 'R',
+          description: l10n.p_5_6_9_desc),
+
+      l10n.section_5_7_title,
+      ThreatData(
+          provisionName: 'Provision 5.7-1',
+          provisionStatus: 'R',
+          description: l10n.p_5_7_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.7-2',
+          provisionStatus: 'R F (s)',
+          description: l10n.p_5_7_2_desc),
+
+      l10n.section_5_8_title,
+      ThreatData(
+          provisionName: 'Provision 5.8-1',
+          provisionStatus: 'R F (t)',
+          description: l10n.p_5_8_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.8-2',
+          provisionStatus: 'M F (u)',
+          description: l10n.p_5_8_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.8-3',
+          provisionStatus: 'M F (v)',
+          description: l10n.p_5_8_3_desc),
+
+      l10n.section_5_9_title,
+      ThreatData(
+          provisionName: 'Provision 5.9-1',
+          provisionStatus: 'R',
+          description: l10n.p_5_9_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.9-2',
+          provisionStatus: 'R',
+          description: l10n.p_5_9_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.9-3',
+          provisionStatus: 'R',
+          description: l10n.p_5_9_3_desc),
+
+      l10n.section_5_10_title,
+      ThreatData(
+          provisionName: 'Provision 5.10-1',
+          provisionStatus: 'R F (w)',
+          description: l10n.p_5_10_1_desc),
+
+      l10n.section_5_11_title,
+      ThreatData(
+          provisionName: 'Provision 5.11-1',
+          provisionStatus: 'M',
+          description: l10n.p_5_11_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.11-2',
+          provisionStatus: 'R F (x)',
+          description: l10n.p_5_11_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.11-3',
+          provisionStatus: 'R',
+          description: l10n.p_5_11_3_desc),
+      ThreatData(
+          provisionName: 'Provision 5.11-4',
+          provisionStatus: 'R',
+          description: l10n.p_5_11_4_desc),
+
+      l10n.section_5_12_title,
+      ThreatData(
+          provisionName: 'Provision 5.12-1',
+          provisionStatus: 'R',
+          description: l10n.p_5_12_1_desc),
+      ThreatData(
+          provisionName: 'Provision 5.12-2',
+          provisionStatus: 'R',
+          description: l10n.p_5_12_2_desc),
+      ThreatData(
+          provisionName: 'Provision 5.12-3',
+          provisionStatus: 'R',
+          description: l10n.p_5_12_3_desc),
+
+      l10n.section_5_13_title,
+      ThreatData(
+          provisionName: 'Provision 5.13-1A',
+          provisionStatus: 'M',
+          description: l10n.p_5_13_1A_desc),
+      ThreatData(
+          provisionName: 'Provision 5.13-1B',
+          provisionStatus: 'M',
+          description: l10n.p_5_13_1B_desc),
+
+      l10n.section_6_title,
+      ThreatData(
+          provisionName: 'Provision 6.1',
+          provisionStatus: 'M',
+          description: l10n.p_6_1_desc),
+      ThreatData(
+          provisionName: 'Provision 6.2',
+          provisionStatus: 'M F (y)',
+          description: l10n.p_6_2_desc),
+      ThreatData(
+          provisionName: 'Provision 6.3A',
+          provisionStatus: 'M F (y)',
+          description: l10n.p_6_3A_desc),
+      ThreatData(
+          provisionName: 'Provision 6.3B',
+          provisionStatus: 'M F (y)',
+          description: l10n.p_6_3B_desc),
+      ThreatData(
+          provisionName: 'Provision 6.4',
+          provisionStatus: 'R F (w)',
+          description: l10n.p_6_4_desc),
+      ThreatData(
+          provisionName: 'Provision 6.5',
+          provisionStatus: 'M F (w)',
+          description: l10n.p_6_5_desc),
+      ThreatData(
+          provisionName: 'Provision 6.6',
+          provisionStatus: 'M F (z)',
+          description: l10n.p_6_6_desc),
+      ThreatData(
+          provisionName: 'Provision 6.7',
+          provisionStatus: 'R F (aa)',
+          description: l10n.p_6_7_desc),
+      ThreatData(
+          provisionName: 'Provision 6.8',
+          provisionStatus: 'R F (z)',
+          description: l10n.p_6_8_desc),
+      // Add more ThreatData objects for each threat from the standard
+    ];
   }
 
   @override
